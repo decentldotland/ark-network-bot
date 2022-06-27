@@ -1,0 +1,37 @@
+{
+  "name": "ark-network-bot",
+  "version": "0.0.1",
+  "description": "ark network TG bot",
+  "type": "module",
+  "main": "./src/app.js",
+  "scripts": {
+    "start": "node ./src/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/decentldotland/ark-network-bot.git"
+  },
+  "keywords": [
+    "ark-network",
+    "telegram",
+    "bot",
+    "arweave",
+    "web3"
+  ],
+  "author": "charmful0x",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/decentldotland/ark-network-bot/issues"
+  },
+  "homepage": "https://github.com/decentldotland/ark-network-bot#readme",
+  "dependencies": {
+    "arweave": "^1.11.4",
+    "axios": "^0.27.2",
+    "base64url": "^3.0.1",
+    "crypto-js": "^4.1.1",
+    "dotenv": "^16.0.1",
+    "node-cache": "^5.1.2",
+    "redstone-smartweave": "^0.4.4",
+    "telegraf": "^4.8.5"
+  }
+}
