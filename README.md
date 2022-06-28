@@ -18,7 +18,7 @@ all of the protocols and chains integrated in the Ark Network.
 ```sh
 git clone https://github.com/decentldotland/ark-network-bot.git
 
-cd ark-network
+cd ark-network-bot
 
 npm install .
 ```
