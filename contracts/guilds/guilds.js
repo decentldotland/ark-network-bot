@@ -10,7 +10,7 @@
  *         ╚═╝░░╚═╝╚═╝░░╚═╝╚═╝░░╚═╝        ╚═╝░░╚══╝╚══════╝░░░╚═╝░░░░░░╚═╝░░░╚═╝░░░╚════╝░╚═╝░░╚═╝╚═╝░░╚═╝
  *
  * @title: Ark Network Guilds Registry
- * @version 0.0.1
+ * @version 0.0.2
  * @author: charmful0x
  * @license: MIT
  * @website ark.decent.land
@@ -22,6 +22,7 @@ export async function handle(state, action) {
   const caller = action.caller;
 
   const ark_oracle = state.ark_oracle;
+  const token_types = state.token_types;
 
   // ERRORS
   const ERROR_CALLER_NOT_REGISTERED_IN_ARK = `caller's has not create a profile in Ark Protocol`;
@@ -34,18 +35,24 @@ export async function handle(state, action) {
   const ERROR_INVALID_THRESHOLD_TYPE = `the guild's token threshold be a number`;
   const ERROR_NULL_THRESHOLD = `threshold must be greater than zero`;
   const ERROR_ALREADY_ADMIN = `the given address has been added already as admin`;
+  const ERROR_INVALID_EVM_ADDRESS = `invalid EVM contract address syntax`;
+  const ERROR_INVALID_TOKEN_TYPE = `invalid token type`;
+  const ERROR_INVALID_TOKEN_PRECISION = `token decimals must be an integer`;
+  const ERROR_TYPE_ALREADY_ADDED = `the given token type has been already added`;
 
   // PUBLIC FUNCTIONS
   if (input.function === "createGuild") {
     /***
      *
      * @dev the caller create a new guild object, that's
-     * linkable with a Telegram group via the TG bot. In
-     * this Guilds release, only PSTs/aNFTs are supported
-     * for token-gated guilds creation.
+     * linkable with a Telegram group via the TG bot. The
+     * supported token types (network's tokens) are stated
+     * in the SWC's state for token-gated guilds creation.
      *
      * @param name guild's name
-     * @param token_address the PST/aNFT SWC address
+     * @param token_address the token contract address
+     * @param token_type the type of the contract's token
+     * @param token_decimals the token's precision
      * @param threshold the min entry requirement
      *
      * @return state
@@ -53,11 +60,18 @@ export async function handle(state, action) {
      **/
     const name = input.name;
     const token_address = input.token_address;
+    const token_type = input.token_type;
+    const token_decimals = input.token_decimals;
     const token_threshold = input.token_threshold;
 
     _handleGuildName(name);
     _validateThreshold(token_threshold);
-    _validateArAddrSyntax(token_address);
+
+    const tokenType = _handleTokenType(token_type, token_decimals);
+
+    tokenType === "PST-ANFT"
+      ? _validateArAddrSyntax(token_address)
+      : _validateEvmAddrSyntax(token_address);
 
     const identities = await _fetchOracle();
 
@@ -80,10 +94,12 @@ export async function handle(state, action) {
         guild_id: SmartWeave.transaction.id,
         guild_token: token_address,
         guild_threshold: token_threshold,
+        token_type: token_type,
+        token_decimals: token_decimals,
         owner_address: caller,
         owner_tg: userProfile.telegram_username, // encrypted in AES
         is_linked: false,
-        group_id: null, 
+        group_id: null,
       });
 
       return { state };
@@ -145,6 +161,26 @@ export async function handle(state, action) {
     return { state };
   }
 
+  if (input.function === "addTokenType") {
+    /**
+     *
+     * @dev contract admins can add new admins addrs.
+     *
+     * @param token_type the token's type key.
+     *
+     * @return state
+     *
+     **/
+    const token_type = input.token_type;
+
+    ContractAssert(state.admins.includes(caller), ERROR_INVALD_CALLER);
+    ContractAssert(!token_types.includes(token_type), ERROR_TYPE_ALREADY_ADDED);
+
+    token_types.push(token_type);
+
+    return { state };
+  }
+
   if (input.function === "updateOracleAddress") {
     /**
      *
@@ -187,8 +223,27 @@ export async function handle(state, action) {
     );
   }
 
+  function _validateEvmAddrSyntax(address) {
+    ContractAssert(
+      /^0x[a-fA-F0-9]{40}$/.test(address),
+      ERROR_INVALID_EVM_ADDRESS
+    );
+  }
+
   function _validateThreshold(threshold) {
     ContractAssert(typeof threshold === "number", ERROR_INVALID_THRESHOLD_TYPE);
     ContractAssert(threshold > 0, ERROR_NULL_THRESHOLD);
+  }
+
+  function _handleTokenType(token_type, token_decimals) {
+    const typeIndex = token_types.findIndex((type) => type === token_type);
+
+    ContractAssert(typeIndex !== -1, ERROR_INVALID_TOKEN_TYPE);
+    ContractAssert(
+      Number.isInteger(token_decimals),
+      ERROR_INVALID_TOKEN_PRECISION
+    );
+
+    return token_types[typeIndex];
   }
 }
