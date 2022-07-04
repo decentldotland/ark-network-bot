@@ -124,10 +124,14 @@ bot.command("/join_ark_guild", async (ctx) => {
   }
 
   const registrant_arweave_address = callerArkProfile.arweave_address;
-  const canJoin = await canJoinGuild(
-    registrant_arweave_address,
-    guildProfile["guild"]
-  );
+  const registrant_evm_address = callerArkProfile.evm_address;
+
+  const canJoin = await canJoinGuild({
+    arweave_user_address: registrant_arweave_address,
+    evm_user_address: registrant_evm_address,
+    guild_object: guildProfile["guild"],
+  });
+
 
   if (canJoin) {
     // users can request only once to join a guild
