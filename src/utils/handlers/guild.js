@@ -4,6 +4,7 @@ import {
 } from "../arweave.js";
 import { ARK_ORACLE_ADDRESS } from "../constants.js";
 import { decrypt } from "../crypto.js";
+import { getAddressBalance } from "./ercUtilities.js";
 
 export async function isGuildLinkable({
   registry_state,
@@ -49,13 +50,36 @@ export async function isActiveGuild(registry_state, guild_id) {
   }
 }
 
-export async function canJoinGuild(user_address, guild_object) {
+export async function canJoinGuild({
+  arweave_user_address,
+  evm_user_address,
+  guild_object,
+} = {}) {
   try {
-    const pstState = await evaluateContractState(guild_object.guild_token);
-    const userBalance = pstState?.balances?.[user_address];
-    const canJoin = userBalance >= guild_object.guild_threshold ? true : false;
+    if (guild_object.token_type === "PST-ANFT") {
+      const pstState = await evaluateContractState(guild_object.guild_token);
+      const userBalance = pstState?.balances?.[arweave_user_address];
+      const canJoin =
+        userBalance >= guild_object.guild_threshold ? true : false;
 
-    return canJoin;
+      return canJoin;
+    }
+
+    // if not "PST-ANFT" then it's ERC
+    const balance = await getAddressBalance(
+      guild_object.guild_token,
+      evm_user_address
+    );
+
+    if (balance) {
+      // if balance is greater than zero
+      const actualBalance = balance / 10 ** guild_object.token_decimals;
+      const canJoin =
+        actualBalance >= guild_object.guild_threshold ? true : false;
+      return canJoin;
+    }
+
+    return false;
   } catch (error) {
     console.log(error);
     return false;
