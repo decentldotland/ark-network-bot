@@ -10,7 +10,7 @@
  *         ╚═╝░░╚═╝╚═╝░░╚═╝╚═╝░░╚═╝        ╚═╝░░╚══╝╚══════╝░░░╚═╝░░░░░░╚═╝░░░╚═╝░░░╚════╝░╚═╝░░╚═╝╚═╝░░╚═╝
  *
  * @title: Ark Network Guilds Registry
- * @version 0.0.2
+ * @version 0.0.3
  * @author: charmful0x
  * @license: MIT
  * @website ark.decent.land
@@ -39,10 +39,12 @@ export async function handle(state, action) {
   const ERROR_INVALID_TOKEN_TYPE = `invalid token type`;
   const ERROR_INVALID_TOKEN_PRECISION = `token decimals must be an integer`;
   const ERROR_TYPE_ALREADY_ADDED = `the given token type has been already added`;
+  const ERROR_MISSING_ARGUMENTS = `the function has no passed arguments`;
+  const ERROR_CALLER_NOT_OWNER = `only the guild owner can invoke this function`;
 
   // PUBLIC FUNCTIONS
   if (input.function === "createGuild") {
-    /***
+    /**
      *
      * @dev the caller create a new guild object, that's
      * linkable with a Telegram group via the TG bot. The
@@ -59,6 +61,7 @@ export async function handle(state, action) {
      *
      **/
     const name = input.name;
+    const description = input.description;
     const token_address = input.token_address;
     const token_type = input.token_type;
     const token_decimals = input.token_decimals;
@@ -91,6 +94,7 @@ export async function handle(state, action) {
 
       state.guilds.push({
         guild_name: name,
+        guild_description: description,
         guild_id: SmartWeave.transaction.id,
         guild_token: token_address,
         guild_threshold: token_threshold,
@@ -106,6 +110,51 @@ export async function handle(state, action) {
     }
 
     throw new ContractError(ERROR_ARWEAVE_NETWORK);
+  }
+
+  if (input.function === "updateGuild") {
+    /**
+     *
+     * @dev guild creator can invoke this
+     * function to update his guild's metadata
+     *
+     * @param guild_id the unique ID of the guild (TXID)
+     * @param name new guild's name
+     * @param description new guild's description
+     * @param token_threshold new guild's threshold
+     *
+     * @return state
+     *
+     **/
+    const guild_id = input.guild_id;
+    const name = input.name;
+    const description = input.description;
+    const token_threshold = input.token_threshold;
+    // at least one parameter must have assigned value
+    ContractAssert(
+      name || description || token_threshold,
+      ERROR_MISSING_ARGUMENTS
+    );
+
+    const guildIndex = _getGuildIndex(guild_id);
+    const guild = state.guilds[guildIndex];
+    // only the guild creator can update the guild metadata
+    ContractAssert(guild.owner_address === caller, ERROR_CALLER_NOT_OWNER);
+
+    if (name) {
+      guild.guid_name = name;
+    }
+
+    if (description) {
+      guild.guild_description = description;
+    }
+
+    if (token_threshold) {
+      _validateThreshold(token_threshold);
+      guild.guild_threshold = token_threshold;
+    }
+
+    return { state };
   }
 
   // ADMIN FUNCTIONS
@@ -245,5 +294,14 @@ export async function handle(state, action) {
     );
 
     return token_types[typeIndex];
+  }
+
+  function _getGuildIndex(guild_id) {
+    const guildIndex = state.guilds.findIndex(
+      (guild) => guild["guild_id"] === guild_id
+    );
+    ContractAssert(guildIndex !== -1, ERROR_GUILD_NOT_FOUND);
+
+    return guildIndex;
   }
 }
