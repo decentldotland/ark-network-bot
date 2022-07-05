@@ -31,5 +31,32 @@ The list of SmartWeave contract used by this bot
 | onchain requests cache      | [./contracts/cache-contract](./contracts/cache-contract) | encypted onchain cache for user's logs of joining a guild |
 | guilds registry      | [./contracts/guilds](./contracts/guilds)    | registry contract for the created guilds |
 
+
+## Guild Creation
+Creating a guild does not require an existing Telegram group to link it directly, instead, the guild can be bound to a group anytime after creation.
+
+### Supported token types
+
+| Tokens  | KEY |
+| ------------- |:-------------:|
+| PSTs & aNFTS      | `PST-ANFT`     |
+| ERCs      | `ERC`     |
+
+#### Contract SWC ID (experimental): [v1WaNWwNmOE7XG_UFvTBwlfMn1OXCaROjZwZHxLu-rI](https://viewblock.io/arweave/address/v1WaNWwNmOE7XG_UFvTBwlfMn1OXCaROjZwZHxLu-rI?tab=state)
+#### Creation interaction:
+
+```json
+{
+  "function": "createGuild",
+  "name": "stablez hoooldersss",
+  "description": "a guild for USDC holdoooors only",
+  "token_address": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", // ERC20 USDC contract address
+  "token_decimals": 6, // token's decimals
+  "token_type": "ERC", // token type
+  "token_threshold": 1 // min amount (inclusive) held by a user to be able to join the guild
+}
+
+```
+
 ## License
 This project is licensed under the [MIT license](./LICENSE)
