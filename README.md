@@ -58,5 +58,11 @@ Creating a guild does not require an existing Telegram group to link it directly
 
 ```
 
+## Tech Stack
+- [Telegram API](https://core.telegram.org/)
+- Powered by [Etherscan.io APIs](https://docs.etherscan.io/)
+- [Arweave Network](https://arweave.org)
+- [Ark Protocol](https://github.com/decentldotland/ark-network)
+
 ## License
 This project is licensed under the [MIT license](./LICENSE)
