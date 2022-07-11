@@ -107,3 +107,21 @@ export async function msgLoading(ctx) {
     parse_mode: "HTML",
   });
 }
+
+export async function msgTgIdentityUnverified(ctx, verification_id) {
+  const messageText =
+    `<b>❗️ Cannot verify your Telegram account with the given Ark identity ID ❗️</b>` +
+    `\n verification TXID (unverified telegram username): <a href="https://viewblock.io/arweave/tx/${verification_id}">${verification_id}</a>`;
+  ctx.telegram.sendMessage(ctx.message.chat.id, messageText, {
+    parse_mode: "HTML",
+  });
+}
+
+export async function msgTgIdentityVerified(ctx, verification_id) {
+  const messageText =
+    `<b>✅ Your Telegram account has been linked to your Ark identity ID ✅</b>` +
+    `\n verification TXID (verified telegram username): <a href="https://viewblock.io/arweave/tx/${verification_id}">${verification_id}</a>`;
+  ctx.telegram.sendMessage(ctx.message.chat.id, messageText, {
+    parse_mode: "HTML",
+  });
+}
