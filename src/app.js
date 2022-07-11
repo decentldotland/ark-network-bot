@@ -1,6 +1,10 @@
 import { Telegraf } from "telegraf";
 import { getMessageType } from "./utils/handlers/messageType.js";
-import { evaluateGuildsRegistryState, verifyGuild } from "./utils/arweave.js";
+import {
+  evaluateGuildsRegistryState,
+  verifyGuild,
+  verifyUserTg,
+} from "./utils/arweave.js";
 import {
   isGuildLinkable,
   isActiveGuild,
@@ -19,12 +23,15 @@ import {
   msgArkIdentityVoid0,
   msgCantJoinGuild,
   msgDuplicatedRequests,
+  msgTgIdentityVerified,
+  msgTgIdentityUnverified,
   msgLoading,
 } from "./utils/handlers/messages.js";
 import { isSuperUser } from "./utils/handlers/isAdmin.js";
 import { userExistenceInGrp } from "./utils/handlers/userExistenceInGrp.js";
 import { BOT_USERNAME } from "./utils/constants.js";
 import { cacheUserRequest, hasRequestedToJoin } from "./utils/cache/cache.js";
+import { canBeVerified } from "./utils/handlers/userTgVerification.js";
 import axios from "axios";
 import "./utils/setEnv.js";
 
@@ -132,7 +139,6 @@ bot.command("/join_ark_guild", async (ctx) => {
     guild_object: guildProfile["guild"],
   });
 
-
   if (canJoin) {
     // users can request only once to join a guild
     const hasRequestedPreviously = await hasRequestedToJoin(
@@ -158,6 +164,44 @@ bot.command("/join_ark_guild", async (ctx) => {
   await msgCantJoinGuild(ctx);
 
   return false;
+});
+
+bot.command("/verify_username", async (ctx) => {
+  await msgLoading(ctx);
+
+  const message = ctx.update.message;
+  const messageType = await getMessageType(message);
+  const registrant_username = message.from?.username;
+
+  // this command can only be invoked in private message
+  if (messageType === "supergroup") {
+    await msgInvalidChatType(ctx, "private");
+
+    return false;
+  }
+
+  const identity_id = message.text.replace("/verify_username ", "");
+
+  const callerArkProfile = await canBeVerified(
+    registrant_username,
+    identity_id
+  );
+  const registrant_arweave_address = callerArkProfile.ar_address;
+  console.log(callerArkProfile)
+
+  //check if the command caller has a valid Ark Protocol identity
+  if (!callerArkProfile.res) {
+    const verification_id = await verifyUserTg(
+      registrant_arweave_address,
+      false
+    );
+    await msgTgIdentityUnverified(ctx, verification_id);
+    return false;
+  }
+
+  const verification_id = await verifyUserTg(callerArkProfile.ar_address, true);
+  await msgTgIdentityVerified(ctx, verification_id);
+  return true;
 });
 
 bot.launch();
