@@ -1,6 +1,6 @@
 import Arweave from "arweave";
 import { SmartWeaveNodeFactory } from "redstone-smartweave";
-import { REGISTRY_ORACLE_ADDRESS } from "./constants.js";
+import { REGISTRY_ORACLE_ADDRESS, ARK_ORACLE_ADDRESS } from "./constants.js";
 import { encrypt, decrypt } from "./crypto.js";
 import "../utils/setEnv.js";
 
@@ -51,11 +51,24 @@ export async function evaluateContractState(pst_swc_id) {
   }
 }
 
+// export async function decryptTelegramUsernameFromState(ark_state) {
+//   try {
+//     for (const user of ark_state.identities) {
+//       if (user.telegram_username) {
+//         user.dec_telegram_username = await decrypt(user.telegram_username);
+//       }
+//     }
+//     return ark_state;
+//   } catch (error) {
+//     console.log(error);
+//   }
+// }
+
 export async function decryptTelegramUsernameFromState(ark_state) {
   try {
     for (const user of ark_state.identities) {
-      if (user.telegram_username) {
-        user.dec_telegram_username = await decrypt(user.telegram_username);
+      if (user.telegram.username) {
+        user.dec_telegram_username = await decrypt(user.telegram.username);
       }
     }
     return ark_state;
@@ -83,6 +96,35 @@ export async function verifyGuild(guild_id, group_id) {
     tx.addTag("Input", interaction);
     tx.addTag("Protocol-Name", "Ark-Guilds");
     tx.addTag("Guild-Type", "Telegram");
+
+    tx.reward = (+tx.reward * 10).toString();
+    await arweave.transactions.sign(tx, pk);
+    await arweave.transactions.post(tx);
+
+    return tx.id;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
+export async function verifyUserTg(user_ar_address, validity) {
+  try {
+    const pk = JSON.parse(process.env.VALIDATOR_JWK);
+    const interaction = `{"function": "verifyTelegram", "identityOf": "${user_ar_address}", "validity": ${validity}}`;
+
+    const tx = await arweave.createTransaction(
+      {
+        data: String(Date.now()),
+      },
+      pk
+    );
+
+    tx.addTag("App-Name", "SmartWeaveAction");
+    tx.addTag("App-Version", "0.3.0");
+    tx.addTag("Contract", ARK_ORACLE_ADDRESS);
+    tx.addTag("Input", interaction);
+    tx.addTag("Protocol-Name", "Ark-Network");
 
     tx.reward = (+tx.reward * 10).toString();
     await arweave.transactions.sign(tx, pk);
