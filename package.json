@@ -1,6 +1,6 @@
 {
   "name": "ark-network-bot",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "ark network TG bot",
   "type": "module",
   "main": "./src/app.js",
