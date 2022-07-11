@@ -86,15 +86,18 @@ export async function canJoinGuild({
   }
 }
 
+
 export async function getUserArkProfile(telegram_username) {
+  // return a verified identity with the given decrypted username
   try {
     const ark_state = await evaluateContractState(ARK_ORACLE_ADDRESS);
     const decoded_state = await decryptTelegramUsernameFromState(ark_state);
-    const profile = decoded_state.identities.find(
-      (user) =>
-        user["dec_telegram_username"].toUpperCase() ===
-        `@${telegram_username}`.toUpperCase()
-    );
+    const profile = decoded_state.identities.find((user) => {
+      user["dec_telegram_username"].toUpperCase() ===
+        `@${telegram_username}`.toUpperCase() &&
+        !!user["is_verified"] &&
+        !!user["telegram"].is_verified;
+    });
 
     return profile ? profile : false;
   } catch (error) {
@@ -102,6 +105,7 @@ export async function getUserArkProfile(telegram_username) {
     return false;
   }
 }
+
 
 async function decryptedTgOwnersUsernames(registry_state) {
   try {
