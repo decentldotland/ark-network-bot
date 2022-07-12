@@ -2,7 +2,7 @@
 	"admins": ["vZY2XY1RD9HIfWi8ift-1_DnHLDadZMWrufSh-_rKF0"],
 	"guilds": [],
 	"guilds_tokens": [],
-	"token_types": ["PST-ANFT", "ERC"],
-	"ark_oracle": "qP614umsvOo9Szvl-xqvnXH0xLOg2eKOsLYnKx2l5SA"
+	"token_types": ["PST-ANFT", "ERC-ETH", "ERC-AVAX"],
+	"ark_oracle": "jRGJtaBjfvDJgpQATUiW3mBbB_wp71xrUmeQBalrm3k"
 }
 
