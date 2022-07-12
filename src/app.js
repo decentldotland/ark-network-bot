@@ -142,7 +142,7 @@ bot.command("/join_ark_guild", async (ctx) => {
   if (canJoin) {
     // users can request only once to join a guild
     const hasRequestedPreviously = await hasRequestedToJoin(
-      callerArkProfile.telegram_username,
+      callerArkProfile.telegram.username,
       guildProfile["guild"]["group_id"]
     );
     if (hasRequestedPreviously) {
@@ -154,7 +154,7 @@ bot.command("/join_ark_guild", async (ctx) => {
 
     await msgSendInvitation(ctx, invite.invite_link, guild_id);
     await cacheUserRequest(
-      callerArkProfile.telegram_username,
+      callerArkProfile.telegram.username,
       guildProfile["guild"]["group_id"]
     );
 
@@ -187,15 +187,10 @@ bot.command("/verify_username", async (ctx) => {
     identity_id
   );
   const registrant_arweave_address = callerArkProfile.ar_address;
-  console.log(callerArkProfile)
 
   //check if the command caller has a valid Ark Protocol identity
   if (!callerArkProfile.res) {
-    const verification_id = await verifyUserTg(
-      registrant_arweave_address,
-      false
-    );
-    await msgTgIdentityUnverified(ctx, verification_id);
+    await msgTgIdentityUnverified(ctx);
     return false;
   }
 
