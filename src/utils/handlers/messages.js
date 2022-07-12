@@ -108,10 +108,9 @@ export async function msgLoading(ctx) {
   });
 }
 
-export async function msgTgIdentityUnverified(ctx, verification_id) {
+export async function msgTgIdentityUnverified(ctx) {
   const messageText =
-    `<b>❗️ Cannot verify your Telegram account with the given Ark identity ID ❗️</b>` +
-    `\n verification TXID (unverified telegram username): <a href="https://viewblock.io/arweave/tx/${verification_id}">${verification_id}</a>`;
+    `<b>❗️ Cannot verify your Telegram account with the given Ark identity ID ❗️</b>`
   ctx.telegram.sendMessage(ctx.message.chat.id, messageText, {
     parse_mode: "HTML",
   });
