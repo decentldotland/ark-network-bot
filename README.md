@@ -40,9 +40,10 @@ Creating a guild does not require an existing Telegram group to link it directly
 | Tokens  | KEY |
 | ------------- |:-------------:|
 | PSTs & aNFTS      | `PST-ANFT`     |
-| ERCs      | `ERC`     |
+| ERC20 & ERC721      | `ERC-ETH`     |
+| ERC20 AVAX | `ERC-AVAX` |
 
-#### Contract SWC ID (experimental): [v1WaNWwNmOE7XG_UFvTBwlfMn1OXCaROjZwZHxLu-rI](https://viewblock.io/arweave/address/v1WaNWwNmOE7XG_UFvTBwlfMn1OXCaROjZwZHxLu-rI?tab=state)
+#### Contract SWC ID (experimental): [R0tQjn7bUH28IhUElh4GwvNKw5aY9r-DF8Q5LjuzxO4](https://viewblock.io/arweave/address/R0tQjn7bUH28IhUElh4GwvNKw5aY9r-DF8Q5LjuzxO4?tab=state)
 #### Creation interaction:
 
 ```json
