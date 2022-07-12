@@ -25,17 +25,16 @@ export async function canBeVerified(telegram_username, identity_id) {
       userProfile["dec_telegram_username"].toUpperCase() ===
       `@${telegram_username.toUpperCase()}`;
     const boolEvaluatedTgUsername =
-      userProfile.telegram.username &&
       userProfile.telegram.is_verified &&
       userProfile.telegram.is_evaluated;
     const boolEvaluatedUser =
       userProfile.is_verified && userProfile.is_evaluated;
-
+      
     if (
       !boolIdEqual ||
       !boolUsernameEqual ||
-      !boolEvaluatedUser || // can verify only non evaluated or verified users
-      !boolEvaluatedTgUsername
+      !boolEvaluatedUser || // can verify only evaluated && verified users (IDs)
+      boolEvaluatedTgUsername // can link only non-linked (evaluated && verified) usernames
     ) {
       return { res: false };
     }
