@@ -27,6 +27,13 @@ export async function isGuildLinkable({
       return false;
     }
 
+    const guildOnwnerDec =
+      stateWithDecryptedOwners.guilds[guildIndex]?.dec_owner_tg;
+    const callerArkProfile = await getUserArkProfile(guildOnwnerDec);
+    // only admins with an evaluated && verified Ark profile can link their guild
+    if (!callerArkProfile) {
+      return false;
+    }
     return true;
   } catch (error) {
     console.log(error);
@@ -65,8 +72,9 @@ export async function canJoinGuild({
       return canJoin;
     }
 
-    // if not "PST-ANFT" then it's ERC
+    // if not "PST-ANFT" then it's EVM token
     const balance = await getAddressBalance(
+      guild_object.token_type,
       guild_object.guild_token,
       evm_user_address
     );
@@ -86,26 +94,24 @@ export async function canJoinGuild({
   }
 }
 
-
 export async function getUserArkProfile(telegram_username) {
   // return a verified identity with the given decrypted username
   try {
     const ark_state = await evaluateContractState(ARK_ORACLE_ADDRESS);
     const decoded_state = await decryptTelegramUsernameFromState(ark_state);
-    const profile = decoded_state.identities.find((user) => {
-      user["dec_telegram_username"].toUpperCase() ===
-        `@${telegram_username}`.toUpperCase() &&
-        !!user["is_verified"] &&
-        !!user["telegram"].is_verified;
-    });
-
+    const profile = decoded_state.identities.find(
+      (user) =>
+        user["dec_telegram_username"].toUpperCase() ==
+          `@${telegram_username}`.toUpperCase() &&
+        user.is_verified &&
+        user.telegram.is_verified
+    );
     return profile ? profile : false;
   } catch (error) {
     console.log(error);
     return false;
   }
 }
-
 
 async function decryptedTgOwnersUsernames(registry_state) {
   try {
