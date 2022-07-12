@@ -11,8 +11,8 @@
  *
  * @title: Ark Network Guilds Registry
  * @version 0.0.3
- * @author: charmful0x
- * @license: MIT
+ * @author charmful0x
+ * @license MIT
  * @website ark.decent.land
  *
  **/
@@ -88,7 +88,7 @@ export async function handle(state, action) {
     if (
       userProfile.is_evaluated &&
       userProfile.is_verified &&
-      !!userProfile.telegram_username
+      !!userProfile.telegram.username
     ) {
       state.guilds_tokens.push(token_address);
 
@@ -101,7 +101,7 @@ export async function handle(state, action) {
         token_type: token_type,
         token_decimals: token_decimals,
         owner_address: caller,
-        owner_tg: userProfile.telegram_username, // encrypted in AES
+        owner_tg: userProfile.telegram.username, // encrypted in AES
         is_linked: false,
         group_id: null,
       });
