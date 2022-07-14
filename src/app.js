@@ -32,6 +32,7 @@ import { userExistenceInGrp } from "./utils/handlers/userExistenceInGrp.js";
 import { BOT_USERNAME } from "./utils/constants.js";
 import { cacheUserRequest, hasRequestedToJoin } from "./utils/cache/cache.js";
 import { canBeVerified } from "./utils/handlers/userTgVerification.js";
+import { getProfileStatus } from "./utils/handlers/profileStatus.js";
 import axios from "axios";
 import "./utils/setEnv.js";
 
@@ -196,6 +197,25 @@ bot.command("/verify_username", async (ctx) => {
 
   const verification_id = await verifyUserTg(callerArkProfile.ar_address, true);
   await msgTgIdentityVerified(ctx, verification_id);
+  return true;
+});
+
+bot.command("/get_profile_status", async (ctx) => {
+  await msgLoading(ctx);
+
+  const message = ctx.update.message;
+  const messageType = await getMessageType(message);
+  const registrant_username = message.from?.username;
+
+  // this command can only be invoked in private message
+  if (messageType === "supergroup") {
+    await msgInvalidChatType(ctx, "private");
+
+    return false;
+  }
+
+  await getProfileStatus(ctx, registrant_username);
+
   return true;
 });
 
