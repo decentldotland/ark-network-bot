@@ -109,8 +109,7 @@ export async function msgLoading(ctx) {
 }
 
 export async function msgTgIdentityUnverified(ctx) {
-  const messageText =
-    `<b>❗️ Cannot verify your Telegram account with the given Ark identity ID ❗️</b>`
+  const messageText = `<b>❗️ Cannot verify your Telegram account with the given Ark identity ID ❗️</b>`;
   ctx.telegram.sendMessage(ctx.message.chat.id, messageText, {
     parse_mode: "HTML",
   });
@@ -120,6 +119,28 @@ export async function msgTgIdentityVerified(ctx, verification_id) {
   const messageText =
     `<b>✅ Your Telegram account has been linked to your Ark identity ID ✅</b>` +
     `\n verification TXID (verified telegram username): <a href="https://viewblock.io/arweave/tx/${verification_id}">${verification_id}</a>`;
+  ctx.telegram.sendMessage(ctx.message.chat.id, messageText, {
+    parse_mode: "HTML",
+  });
+}
+
+export async function msgProfileStatusNotFound(ctx, telegram_username) {
+  const messageText =
+    `<b> Profile Status: not found ❌</b>\n` +
+    `Cannot find an Ark Protocol identity associated with @${telegram_username} - Check the validity of your Ark Identity or create a new one on https://ark.decent.land`;
+  ctx.telegram.sendMessage(ctx.message.chat.id, messageText, {
+    parse_mode: "HTML",
+  });
+}
+
+export async function msgProfileStatusFound(ctx, profile) {
+  const messageText =
+    `<b> Profile Status: found ✅</b>\n\n` +
+    `- identity id: <code>${profile.identity_id}</code>\n` +
+    `- Arweave Address: <code>${profile.arweave_address}</code>\n` +
+    `- EVM Address: <code>${profile.evm_address}</code>\n` +
+    `- TG username verified: <code>${profile.telegram.is_verified}</code>\n` +
+    `- TG username evaluated: <code>${profile.telegram.is_evaluated}</code>\n`;
   ctx.telegram.sendMessage(ctx.message.chat.id, messageText, {
     parse_mode: "HTML",
   });
