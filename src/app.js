@@ -25,6 +25,7 @@ import {
   msgDuplicatedRequests,
   msgTgIdentityVerified,
   msgTgIdentityUnverified,
+  msgUsernameVerRequestSent,
   msgLoading,
 } from "./utils/handlers/messages.js";
 import { isSuperUser } from "./utils/handlers/isAdmin.js";
@@ -33,6 +34,7 @@ import { BOT_USERNAME } from "./utils/constants.js";
 import { cacheUserRequest, hasRequestedToJoin } from "./utils/cache/cache.js";
 import { canBeVerified } from "./utils/handlers/userTgVerification.js";
 import { getProfileStatus } from "./utils/handlers/profileStatus.js";
+import { cacheUsernameVerification, hasCachedUsername } from "./utils/cache/cache.js";
 import axios from "axios";
 import "./utils/setEnv.js";
 
@@ -173,6 +175,7 @@ bot.command("/verify_username", async (ctx) => {
   const message = ctx.update.message;
   const messageType = await getMessageType(message);
   const registrant_username = message.from?.username;
+  const hasRequestedPreviously = await hasCachedUsername(registrant_username);
 
   // this command can only be invoked in private message
   if (messageType === "supergroup") {
@@ -181,6 +184,10 @@ bot.command("/verify_username", async (ctx) => {
     return false;
   }
 
+  if (hasRequestedPreviously) {
+    await msgUsernameVerRequestSent(ctx);
+    return false;
+  }
   const identity_id = message.text.replace("/verify_username ", "");
 
   const callerArkProfile = await canBeVerified(
@@ -189,13 +196,14 @@ bot.command("/verify_username", async (ctx) => {
   );
   const registrant_arweave_address = callerArkProfile.ar_address;
 
-  //check if the command caller has a valid Ark Protocol identity
+  // check if the command caller has a valid Ark Protocol identity
   if (!callerArkProfile.res) {
     await msgTgIdentityUnverified(ctx);
     return false;
   }
 
   const verification_id = await verifyUserTg(callerArkProfile.ar_address, true);
+  await cacheUsernameVerification(registrant_username)
   await msgTgIdentityVerified(ctx, verification_id);
   return true;
 });
