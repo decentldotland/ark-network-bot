@@ -109,7 +109,9 @@ export async function msgLoading(ctx) {
 }
 
 export async function msgTgIdentityUnverified(ctx) {
-  const messageText = `<b>❗️ Cannot verify your Telegram account with the given Ark identity ID ❗️</b>`;
+  const messageText =
+    `<b>❗️ Cannot verify your Telegram account with the given Ark identity ID ❗️</b>\n\n` +
+    `<b>TIP:</b> to check your Ark identity status, invoke /get_profile_status`;
   ctx.telegram.sendMessage(ctx.message.chat.id, messageText, {
     parse_mode: "HTML",
   });
@@ -141,6 +143,18 @@ export async function msgProfileStatusFound(ctx, profile) {
     `- EVM Address: <code>${profile.evm_address}</code>\n` +
     `- TG username verified: <code>${profile.telegram.is_verified}</code>\n` +
     `- TG username evaluated: <code>${profile.telegram.is_evaluated}</code>\n`;
+  ctx.telegram.sendMessage(ctx.message.chat.id, messageText, {
+    parse_mode: "HTML",
+  });
+}
+
+export async function msgUsernameVerRequestSent(ctx) {
+  const messageText =
+    `<b> verification request failed - reasons:</b>\n\n` +
+    `1- Your TX of the creation of your Ark identity has not been mined.\n` +
+    `2- Your Ark identitycreation has failed.\n` +
+    `3- Your requested a verification within less than 10 min.\n\n` +
+    `<b>TIP:</b> to check your Ark identity status, invoke /get_profile_status`;
   ctx.telegram.sendMessage(ctx.message.chat.id, messageText, {
     parse_mode: "HTML",
   });
