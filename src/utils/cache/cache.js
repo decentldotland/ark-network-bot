@@ -74,3 +74,52 @@ export async function hasRequestedToJoin(enc_username, enc_group_id) {
     return true;
   }
 }
+
+export async function cacheUsernameVerification(username) {
+  try {
+    if (!cacheState.has("usernames")) {
+      const cache = [{ [username]: Date.now() }];
+      cacheState.set("usernames", base64url(JSON.stringify(cache)));
+      return true;
+    }
+
+    const cache = cacheState.get("usernames");
+    const decodedCache = JSON.parse(base64url.decode(cache));
+    decodedCache.push({ [username]: Date.now() });
+
+    cacheState.set("usernames", base64url(JSON.stringify(decodedCache)));
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
+export async function hasCachedUsername(username) {
+  try {
+    const TEN_MIN = 6e5;
+    if (!cacheState.has("usernames")) {
+      return false;
+    }
+    const cache = cacheState.get("usernames");
+    const cachedUsernames = JSON.parse(base64url.decode(cache));
+    console.log(cachedUsernames);
+    const user = cachedUsernames.find((usr) =>
+      Object.keys(usr).includes(username)
+    );
+    if (!user) {
+      return false;
+    }
+
+    const timestamp = user[username];
+    console.log(`TIMESTAMP: ${timestamp}`);
+    if (timestamp + TEN_MIN < Date.now()) {
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    console.log(error);
+    return true;
+  }
+}
