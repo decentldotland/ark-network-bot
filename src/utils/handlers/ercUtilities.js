@@ -35,6 +35,11 @@ async function resolveTokenType(type) {
         URL: `api.snowtrace.io`,
         API_KEY: process.env.SNOWTRACE_API_KEY,
       };
+    case "BEP20":
+      return {
+        URL: `api.bscscan.com`,
+        API_KEY: process.env.BSCSCAN_API_KEY,
+      };
     default:
       return {
         URL: `api.etherscan.io`,
