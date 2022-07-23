@@ -21,7 +21,6 @@ export async function isGuildLinkable({
         guild?.["dec_owner_tg"] == caller_username &&
         !guild["is_linked"]
     );
-
     console.log("FOUND GUILD INDEX", guildIndex);
     if (guildIndex === -1) {
       return false;
@@ -99,10 +98,10 @@ export async function getUserArkProfile(telegram_username) {
   try {
     const ark_state = await evaluateContractState(ARK_ORACLE_ADDRESS);
     const decoded_state = await decryptTelegramUsernameFromState(ark_state);
+    const normalizedUsername = `${telegram_username}`.toUpperCase();
     const profile = decoded_state.identities.find(
       (user) =>
-        user["dec_telegram_username"].toUpperCase() ==
-          `@${telegram_username}`.toUpperCase() &&
+        _tgUsernamesEqual(user["dec_telegram_username"], normalizedUsername) &&
         user.is_verified &&
         user.telegram.is_verified
     );
@@ -125,4 +124,8 @@ async function decryptedTgOwnersUsernames(registry_state) {
   } catch (error) {
     console.log(error);
   }
+}
+
+function _tgUsernamesEqual(acc0, acc1) {
+  return acc0.toUpperCase() === acc1.toUpperCase();
 }
