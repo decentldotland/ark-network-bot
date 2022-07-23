@@ -125,7 +125,7 @@ bot.command("/join_ark_guild", async (ctx) => {
     return false;
   }
 
-  const callerArkProfile = await getUserArkProfile(registrant_username);
+  const callerArkProfile = await getUserArkProfile(`@${registrant_username}`);
 
   //check if the command caller has a valid Ark Protocol identity
   if (!callerArkProfile) {
