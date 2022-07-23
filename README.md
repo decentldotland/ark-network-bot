@@ -39,33 +39,35 @@ Creating a guild does not require an existing Telegram group to link it directly
 
 | Tokens  | KEY |
 | ------------- |:-------------:|
-| PSTs & aNFTS      | `PST-ANFT`     |
+| BEP20 | `BEP20` |
 | ERC20 & ERC721      | `ERC-ETH`     |
 | ERC20 AVAX | `ERC-AVAX` |
+| PSTs & aNFTS      | `PST-ANFT`     |
 
-#### Contract SWC ID (experimental): [R0tQjn7bUH28IhUElh4GwvNKw5aY9r-DF8Q5LjuzxO4](https://viewblock.io/arweave/address/R0tQjn7bUH28IhUElh4GwvNKw5aY9r-DF8Q5LjuzxO4?tab=state)
+#### Contract SWC ID (experimental): [sWR6h_DrFHBS2P2-l1zYFo0R7ufJy32YINM1UVP7f5w](https://viewblock.io/arweave/address/sWR6h_DrFHBS2P2-l1zYFo0R7ufJy32YINM1UVP7f5w?tab=state)
 #### Creation interaction:
 
 ```json
 {
   "function": "createGuild",
-  "name": "stablez hoooldersss",
-  "description": "a guild for USDC holdoooors only",
-  "token_address": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", // ERC20 USDC contract address
-  "token_decimals": 6, // token's decimals
-  "token_type": "ERC", // token type
-  "token_threshold": 1 // min amount (inclusive) held by a user to be able to join the guild
+  "name": "pancakessss",
+  "description": "we love pancakes",
+  "token_address": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82", // BEP20 $CAKE contract address
+  "token_decimals": 18, // token's decimals
+  "token_type": "BEP20", // token type
+  "token_threshold": 0.05 // min amount (inclusive) held by a user to be able to join the guild
 }
 
 ```
 
 ## Tech Stack
-## Tech Stack
-- [Telegram API](https://core.telegram.org/)
-- [Arweave Network](https://arweave.org)
 - [Ark Protocol](https://github.com/decentldotland/ark-network)
+- [Arweave Network](https://arweave.org)
+- [Telegram API](https://core.telegram.org/)
+- Powered by [Bscscan.com APIs](https://docs.bscscan.com/)
 - Powered by [Etherscan.io APIs](https://docs.etherscan.io/)
-- Powered by [Snowtrace.io APIs](https://snowtrace.io/apis)
+- Powered by [Snowtrace.io APIs](https://docs.snowtrace.io/)
+
 
 ## License
 This project is licensed under the [MIT license](./LICENSE)
