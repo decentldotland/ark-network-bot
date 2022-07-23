@@ -43,7 +43,7 @@ export async function msgSendInvitation(ctx, invitation_url, guild_id) {
 }
 
 export async function msgBotNotAdmin(ctx) {
-  const messageText = `<b>❗️ You must give the bot admin privileges before linking the guild! ❗️</b>`;
+  const messageText = `<b>❗️ You must give the bot admin privileges before linking the guild ❗️</b>`;
 
   ctx.telegram.sendMessage(ctx.message.chat.id, messageText, {
     parse_mode: "HTML",
