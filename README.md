@@ -40,9 +40,10 @@ Creating a guild does not require an existing Telegram group to link it directly
 | Tokens  | KEY |
 | ------------- |:-------------:|
 | BEP20 | `BEP20` |
-| ERC20 & ERC721      | `ERC-ETH`     |
+| ERC20 ETH  | `ERC-ETH`     |
 | ERC20 AVAX | `ERC-AVAX` |
-| PSTs & aNFTS      | `PST-ANFT`     |
+| ERC20 FTM | `ERC-FTM` |
+| PSTs & aNFTS | `PST-ANFT`     |
 
 #### Contract SWC ID (experimental): [sWR6h_DrFHBS2P2-l1zYFo0R7ufJy32YINM1UVP7f5w](https://viewblock.io/arweave/address/sWR6h_DrFHBS2P2-l1zYFo0R7ufJy32YINM1UVP7f5w?tab=state)
 #### Creation interaction:
@@ -66,6 +67,7 @@ Creating a guild does not require an existing Telegram group to link it directly
 - [Telegram API](https://core.telegram.org/)
 - Powered by [Bscscan.com APIs](https://docs.bscscan.com/)
 - Powered by [Etherscan.io APIs](https://docs.etherscan.io/)
+- Powered by [Ftmscan.com APIs](https://docs.ftmscan.com/)
 - Powered by [Snowtrace.io APIs](https://docs.snowtrace.io/)
 
 
