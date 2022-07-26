@@ -1,7 +1,7 @@
 {
-	"admins": ["vZY2XY1RD9HIfWi8ift-1_DnHLDadZMWrufSh-_rKF0"],
-	"guilds": [],
-	"guilds_tokens": [],
-	"token_types": ["PST-ANFT", "ERC-ETH", "ERC-AVAX", "BEP20"],
-	"ark_oracle": "VWWz1k2u6LnfNLJVCQxVVE3b2ivTVBbgLkMrPe3naoY"
+  "admins": ["vZY2XY1RD9HIfWi8ift-1_DnHLDadZMWrufSh-_rKF0"],
+  "guilds": [],
+  "guilds_tokens": [],
+  "token_types": ["PST-ANFT", "ERC-ETH", "ERC-AVAX", "ERC-FTM", "BEP20"],
+  "ark_oracle": "VWWz1k2u6LnfNLJVCQxVVE3b2ivTVBbgLkMrPe3naoY"
 }
