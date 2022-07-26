@@ -35,6 +35,11 @@ async function resolveTokenType(type) {
         URL: `api.snowtrace.io`,
         API_KEY: process.env.SNOWTRACE_API_KEY,
       };
+    case "ERC-FTM":
+      return {
+        URL: `api.ftmscan.com`,
+        API_KEY: process.env.FTMSCAN_API_KEY,
+      };
     case "BEP20":
       return {
         URL: `api.bscscan.com`,
