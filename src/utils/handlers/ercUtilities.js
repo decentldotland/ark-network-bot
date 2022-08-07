@@ -40,6 +40,11 @@ async function resolveTokenType(type) {
         URL: `api.ftmscan.com`,
         API_KEY: process.env.FTMSCAN_API_KEY,
       };
+    case "ERC-POLYGON":
+      return {
+        URL: `api.polygonscan.com`,
+        API_KEY: process.env.POLYGONSCAN_API_KEY,
+      };
     case "BEP20":
       return {
         URL: `api.bscscan.com`,
