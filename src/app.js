@@ -77,7 +77,7 @@ bot.command("/link_ark_guild", async (ctx) => {
   const isLinkable = await isGuildLinkable({
     registry_state: registryState,
     guild_id: guild_id,
-    caller_username: `@${registrant_username}`.toUpperCase(),
+    caller_username: `${registrant_username}`.toUpperCase(),
   });
 
   if (isLinkable) {
@@ -125,7 +125,7 @@ bot.command("/join_ark_guild", async (ctx) => {
     return false;
   }
 
-  const callerArkProfile = await getUserArkProfile(`@${registrant_username}`);
+  const callerArkProfile = await getUserArkProfile(registrant_username);
 
   //check if the command caller has a valid Ark Protocol identity
   if (!callerArkProfile) {
