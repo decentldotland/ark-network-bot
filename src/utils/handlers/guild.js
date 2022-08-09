@@ -21,6 +21,7 @@ export async function isGuildLinkable({
         guild?.["dec_owner_tg"] == caller_username &&
         !guild["is_linked"]
     );
+    console.log(`guild index: `, guildIndex);
     console.log("FOUND GUILD INDEX", guildIndex);
     if (guildIndex === -1) {
       return false;
@@ -127,5 +128,5 @@ async function decryptedTgOwnersUsernames(registry_state) {
 }
 
 function _tgUsernamesEqual(acc0, acc1) {
-  return acc0.toUpperCase() === acc1.toUpperCase();
+  return acc0?.toUpperCase() === acc1?.toUpperCase();
 }
