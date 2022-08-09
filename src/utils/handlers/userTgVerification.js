@@ -23,7 +23,7 @@ export async function canBeVerified(telegram_username, identity_id) {
     const boolIdEqual = userProfile["identity_id"] === identity_id;
     const boolUsernameEqual =
       userProfile["dec_telegram_username"].toUpperCase() ===
-      `@${telegram_username.toUpperCase()}`;
+      `${telegram_username.toUpperCase()}`;
     const boolEvaluatedTgUsername =
       userProfile.telegram.is_verified &&
       userProfile.telegram.is_evaluated;
