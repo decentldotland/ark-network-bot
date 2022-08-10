@@ -125,6 +125,7 @@ export async function verifyUserTg(user_ar_address, validity) {
     tx.addTag("Contract", ARK_ORACLE_ADDRESS);
     tx.addTag("Input", interaction);
     tx.addTag("Protocol-Name", "Ark-Network");
+    tx.addTag("Protocol-Action", "Verify-Telegram");
 
     tx.reward = (+tx.reward * 10).toString();
     await arweave.transactions.sign(tx, pk);
