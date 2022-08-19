@@ -45,6 +45,7 @@ Creating a guild does not require an existing Telegram group to link it directly
 | ERC20 FTM | `ERC-FTM` |
 | ERC20 MATIC | `ERC-POLYGON` |
 | PSTs & aNFTS | `PST-ANFT`     |
+| wDOGE (dogechain.dog)| `DOGE-CHAIN` |
 
 #### Contract SWC ID (experimental): [sWR6h_DrFHBS2P2-l1zYFo0R7ufJy32YINM1UVP7f5w](https://viewblock.io/arweave/address/sWR6h_DrFHBS2P2-l1zYFo0R7ufJy32YINM1UVP7f5w?tab=state)
 #### Creation interaction:
