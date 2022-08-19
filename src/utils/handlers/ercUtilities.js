@@ -1,4 +1,5 @@
 import axios from "axios";
+import { fetchDogeChainBalance } from "./exoticUtilities.js";
 import "../setEnv.js";
 
 export async function getAddressBalance(
@@ -7,6 +8,9 @@ export async function getAddressBalance(
   user_address
 ) {
   try {
+    if (token_type === "DOGE-CHAIN") {
+      return await fetchDogeChainBalance(user_address);
+    }
     const ENDPOINT = await resolveTokenType(token_type);
     const re = (
       await axios.get(
