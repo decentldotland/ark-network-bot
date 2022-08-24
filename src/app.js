@@ -169,7 +169,7 @@ bot.command("/join_ark_guild", async (ctx) => {
   return false;
 });
 
-bot.command("/verify_username", async (ctx) => {
+const verifyUsername = async (ctx) => {
   await msgLoading(ctx);
 
   const message = ctx.update.message;
@@ -206,7 +206,11 @@ bot.command("/verify_username", async (ctx) => {
   await cacheUsernameVerification(registrant_username)
   await msgTgIdentityVerified(ctx, verification_id);
   return true;
-});
+}
+
+bot.command("/start", async (ctx) => await verifyUsername(ctx));
+
+bot.command("/verify_username", async (ctx) => await verifyUsername(ctx));
 
 bot.command("/get_profile_status", async (ctx) => {
   await msgLoading(ctx);
